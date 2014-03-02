@@ -7,14 +7,14 @@ using semver.SemVer.StringHelper;
 /**
 	A utility class for working with semantic versioning.
 	
-	This implementation is a *hair* less strict in that it allows v1.2.3 things, 
+	This implementation is a *hair* less strict in that it allows v1.2.3 things,
 	and also tags that don't begin with a char.
 
 	See http://semver.org/
 **/
 class SemVer
 {
-	static var semver = 
+	static var semver =
 			"\\s*[v=]*\\s*([0-9]+)"				// major
 		   + "\\.([0-9]+)"						// minor
 		   + "\\.([0-9]+)"						// patch
@@ -60,7 +60,7 @@ class SemVer
 		var v = version.copy();
 		for (i in 0...v.length) v[i] = v[i] == null ? "" : v[i];
 		return [v[0], v[1], v[2]].join(".") + (v[3]) + (v[4]);
-	}	
+	}
 
 	public static function clean(version:String):String
 	{
@@ -419,5 +419,39 @@ class StringHelper
 	public static function or(string:String, substitute:String):String
 	{
 		return string == null ? substitute : string;
+	}
+}
+
+abstract Version(Array<String>) to Array<String> from Array<String>
+{
+	public var major(get, set):String;
+	public var minor(get, set):String;
+	public var patch(get, set):String;
+	public var build(get, set):String;
+	public var tag(get, set):String;
+	
+	public inline function new(major:String, minor:String, patch:String, ?build:String, ?tag:String)
+	{
+		this = [major, minor, patch, build, tag];
+	}
+	
+	inline function get_major() return this[0];
+	inline function set_major(s:String) return this[0] = s;
+	
+	inline function get_minor() return this[1];
+	inline function set_minor(s:String) return this[1] = s;
+	
+	inline function get_patch() return this[2];
+	inline function set_patch(s:String) return this[2] = s;
+	
+	inline function get_build() return this[3];
+	inline function set_build(s:String) return this[3] = s;
+	
+	inline function get_tag() return this[4];
+	inline function set_tag(s:String) return this[4] = s;
+	
+	@:to public function toString():String
+	{
+		return '$major.$minor.$patch' + (build != null ? build : "") + (tag != null ? tag : "");
 	}
 }
